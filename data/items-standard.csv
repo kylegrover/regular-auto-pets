@@ -1,0 +1,17 @@
+item,emoji,tier,atk,def,special,status
+apple,🍎,1,1,1,,
+honey,🍯,1,0,0,,1
+cupcake,🧁,2,0,0,1,
+meatbone,🍖,2,0,0,,1
+sleepingpill,💊,2,0,0,1,
+garlic,🧄,3,0,0,,1
+saladbowl,🥗,3,0,0,1,
+cannedfood,🥫,4,0,0,1,
+pear,🍐,4,2,2,,
+chili,🌶,5,0,0,,1
+chocolate,🍫,5,0,0,1,
+sushi,🍣,5,0,0,1,
+melon,🍈,6,0,0,,1
+mushroom,🍄,6,0,0,,1
+pizza,🍕,6,0,0,1,
+steak,🥩,6,0,0,,1
