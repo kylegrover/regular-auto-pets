@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regular Auto Pets</title>
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <!-- production version, optimized for size and speed -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2"></script> -->
+    <script src="./js/dex.js"></script>
+    <link rel="stylesheet" href="./style.css">
+</head><body>
+    <div id="sak">
+        <section id="screen-start" v-if="game.screen == 'start'">
+            <h1>Welcome to Regular Auto Pets</h1>
+            <button v-on:click="game.turnStart()">Start Game</button>
+        </section>
+        <section id="screen-shop" v-if="game.screen == 'shop'">
+            <div class="game-stats">
+                <span>💰{{ game.gold }}</span>
+                <span>💖{{ game.lives }}</span>
+                <span>🏆{{ game.wins }}</span>
+                <span>⏳{{ game.turn }}</span>
+            </div>
+            <h1>Team</h1>
+            <div class="team-items">
+                <div class="team-item" v-for="i in [0,1,2,3,4]" v-on:click="game.buy(game.selected, i)">                 
+                    <pet v-if="game.team[i] !== null"
+                        v-bind:emoji="game.team[i].emoji"
+                        v-bind:atk="game.team[i].atk"
+                        v-bind:hp="game.team[i].hp"
+                        v-bind:tier="game.team[i].tier"
+                    ></pet>
+                </div>
+            </div>
+            <h1>Shop</h1>
+            <div class="shop-items">
+                <div class="shop-item" 
+                    v-for="i in [0,1,2,3,4]" 
+                    v-on:click="game.select(i)" 
+                    v-bind:class="{
+                        selected: game.selected == i,
+                        frozen: game.frozen.includes(i)
+                    }">
+                    <pet v-if="game.shop[i] !== null"
+                        v-bind:emoji="game.shop[i].emoji"
+                        v-bind:atk="game.shop[i].atk"
+                        v-bind:hp="game.shop[i].hp"
+                        v-bind:tier="game.shop[i].tier"
+                    ></pet>
+                </div>
+            </div>
+            <div class="shop-buttons">
+                <button
+                    v-bind:disabled="game.gold < 1"
+                    class="shop-roll"
+                    v-on:click="game.roll()"
+                >Roll</button>
+                <button
+                    v-bind:disabled="game.selected === null"
+                    v-on:click="game.freeze()"
+                >Freeze</button>
+                <button
+                    class="shop-fight"
+                    v-on:click="game.battleStart()"
+                >End Turn</button>
+            </div>
+        </section>
+        <section id="screen-battle" v-if="game.screen == 'battle'">
+            <h1>
+                Battle 
+                <button
+                    v-on:click="game.battleStep()"
+                >Fight</button>
+            </h1>
+            <div class="team-items">
+                <div class="team-item" v-for="i in [0,1,2,3,4]">
+                    <pet 
+                        v-if="game.battleTeam[i] !== null"
+                        v-bind:emoji="game.battleTeam[i].emoji"
+                        v-bind:atk="game.battleTeam[i].atk"
+                        v-bind:hp="game.battleTeam[i].hp"
+                        v-bind:tier="game.battleTeam[i].tier"
+                    ></pet>
+                </div>
+            </div>
+            <div class="enemy-items">
+                <div class="enemy-item" v-for="i in [0,1,2,3,4]">
+                    <pet 
+                        v-if="game.enemy[i] !== null"
+                        v-bind:emoji="game.enemy[i].emoji"
+                        v-bind:atk="game.enemy[i].atk"
+                        v-bind:hp="game.enemy[i].hp"
+                        v-bind:tier="game.enemy[i].tier"
+                    ></pet>
+                </div>
+            </div>
+        </section>     
+        <section id="screen-battle_results" v-if="game.screen == 'battle_results'">       
+            <h1>Battle {{ game.battle_results }}</h1>
+            <button v-on:click="game.turnStart()">Turn {{ game.turn + 1 }}</button>
+        </section>
+        <section id="screen-game_results" v-if="game.screen == 'game_results'">
+            <h1>You {{ game.game_results }}</h1>
+            <button v-on:click="startGame()">Play Again</button>
+    </div>
+    <script src="./js/game.js"></script>
+    <script src="./js/main.js"></script>
+    <script>
+        Vue.component('pet', {
+            props: ['emoji', 'tier', 'atk', 'hp'],
+            template: `<div class="pet">
+                <div class="pet-tier">🎲{{tier}}</div>
+                <div class="pet-emoji">{{emoji}}</div>
+                <div class="pet-stats">
+                    <div class="pet-hp">💖{{hp}}</div>
+                    <div class="pet-atk">⚔{{atk}}</div>
+                </div>
+            </div>`,
+        })
+    </script>
+</body></html>

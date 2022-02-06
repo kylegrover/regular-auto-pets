@@ -1,0 +1,108 @@
+:root {
+    --font: monospace
+}
+
+html {
+    font-family: 'Segoe UI Symbol';
+    font-size: 20px;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    font-family: var(--font);
+    font-size: 20px;
+}
+
+button {
+    background: black;
+    border: none;
+    color: white;
+    font-family: var(--font);
+    font-size: 20px;
+    padding: 4px 8px;
+    border-radius: 2px;
+}
+
+#sak {
+    max-width: 400px;
+}
+
+/* menu */
+#screen-start {}
+
+/* shop */
+#screen-shop {}
+.shop-items, .team-items, .enemy-items {
+    display: flex;
+}
+.shop-item,.team-item, .enemy-item {
+    margin: 5px;
+    padding: 2px;
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border: 3px double black;
+    border-radius: 2px;
+}
+.shop-item.selected {
+    border: 3px solid black;
+}
+.shop-item.frozen {
+    color: darkblue;
+}
+
+.shop-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* battle */
+#screen-battle {
+    display: flex;
+    flex-wrap: wrap;
+}
+#screen-battle h1 {
+    flex: 1 0 100%;
+}
+
+
+
+
+
+
+
+.game-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 24px;
+}
+
+/* pet */
+
+.pet {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.pet .pet-emoji {
+    flex: 1 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    margin: -12px;
+}
+
+.pet .pet-tier {
+    font-size: 16px;
+    background: white;
+}
+
+.pet .pet-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+}
