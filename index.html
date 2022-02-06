@@ -26,12 +26,19 @@
             </div>
             <h1>Team</h1>
             <div class="team-items">
-                <div class="team-item" v-for="i in [0,1,2,3,4]" v-on:click="game.buy(game.selected, i)">                 
+                <div class="team-item" 
+                    v-for="i in [0,1,2,3,4]" 
+                    v-on:click="game.select('t'+i)"
+                    v-bind:class="{
+                        selected: game.selected == 't'+i,
+                        frozen: game.frozen.includes(i)
+                    }">
                     <pet v-if="game.team[i] !== null"
                         v-bind:emoji="game.team[i].emoji"
                         v-bind:atk="game.team[i].atk"
                         v-bind:hp="game.team[i].hp"
                         v-bind:tier="game.team[i].tier"
+                        v-bind:xp="game.team[i].xp"
                     ></pet>
                 </div>
             </div>
@@ -39,9 +46,9 @@
             <div class="shop-items">
                 <div class="shop-item" 
                     v-for="i in [0,1,2,3,4]" 
-                    v-on:click="game.select(i)" 
+                    v-on:click="game.select('s'+i)" 
                     v-bind:class="{
-                        selected: game.selected == i,
+                        selected: game.selected == 's'+i,
                         frozen: game.frozen.includes(i)
                     }">
                     <pet v-if="game.shop[i] !== null"
@@ -49,6 +56,7 @@
                         v-bind:atk="game.shop[i].atk"
                         v-bind:hp="game.shop[i].hp"
                         v-bind:tier="game.shop[i].tier"
+                        v-bind:xp="1"
                     ></pet>
                 </div>
             </div>
@@ -83,6 +91,7 @@
                         v-bind:atk="game.battleTeam[i].atk"
                         v-bind:hp="game.battleTeam[i].hp"
                         v-bind:tier="game.battleTeam[i].tier"
+                        v-bind:xp="game.battleTeam[i].xp"
                     ></pet>
                 </div>
             </div>
@@ -94,6 +103,7 @@
                         v-bind:atk="game.enemy[i].atk"
                         v-bind:hp="game.enemy[i].hp"
                         v-bind:tier="game.enemy[i].tier"
+                        v-bind:xp="game.enemy[i].xp"
                     ></pet>
                 </div>
             </div>
@@ -110,11 +120,14 @@
     <script src="./js/main.js"></script>
     <script>
         Vue.component('pet', {
-            props: ['emoji', 'tier', 'atk', 'hp'],
+            props: ['emoji', 'tier', 'atk', 'hp', 'xp'],
             template: `<div class="pet">
-                <div class="pet-tier">🎲{{tier}}</div>
+                <div class="pet-info">
+                    <div class="pet-tier">🎲{{tier}}</div>
+                    <div class="pet-xp">🏅{{xp}}</div>
+                </div>
                 <div class="pet-emoji">{{emoji}}</div>
-                <div class="pet-stats">
+                <div class="pet-info">
                     <div class="pet-hp">💖{{hp}}</div>
                     <div class="pet-atk">⚔{{atk}}</div>
                 </div>

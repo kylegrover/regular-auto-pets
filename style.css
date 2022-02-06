@@ -43,7 +43,8 @@ button {
     border: 3px double black;
     border-radius: 2px;
 }
-.shop-item.selected {
+.shop-item.selected,
+.team-item.selected {
     border: 3px solid black;
 }
 .shop-item.frozen {
@@ -96,12 +97,7 @@ button {
     margin: -12px;
 }
 
-.pet .pet-tier {
-    font-size: 16px;
-    background: white;
-}
-
-.pet .pet-stats {
+.pet .pet-info {
     display: flex;
     justify-content: space-between;
     font-size: 16px;

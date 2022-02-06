@@ -23,16 +23,20 @@ roll() {
     if (this.gold < 1) return false
     this.gold--
     for (let i = 0; i < this.shop_slots; i++) {
-        let new_item = makeCopy(dex[this.pickItem()])
-        new_item.xp = 0
-        Vue.set(this.shop, i, new_item)
+        let picked = this.pickItem()
+        if (!picked) {
+            Vue.set(this.shop, i, null)
+        } else {
+            console.log('picked is true',picked)
+            let new_item = makeCopy(dex[picked])
+            Vue.set(this.shop, i, new_item)
+        }
     }
 }
 
 battleStart() {
     // instance team
     this.battleTeam = makeCopy(this.team)
-    this.battleTeam = this.alignTeam(this.battleTeam)
     // instance enemy
     Vue.set(this.enemy, 0, this.makeEnemy())
     Vue.set(this.enemy, 1, this.makeEnemy())
@@ -40,6 +44,7 @@ battleStart() {
     Vue.set(this.enemy, 3, this.makeEnemy())
     Vue.set(this.enemy, 4, this.makeEnemy())
     // set screen
+    this.alignTeams()
     this.screen = 'battle'
 }
 
@@ -51,13 +56,18 @@ alignTeam(team) {
     return team
 }
 
+alignTeams() {
+    this.battleTeam = this.alignTeam(this.battleTeam)
+    this.enemy = this.alignTeam(this.enemy)
+}
+
 battleStep() {
+    this.checkWin()
+    this.alignTeams()
+
     let a = this.battleTeam
     let b = this.enemy
-    // align teams to front
-    a = this.alignTeam(a)
-    b = this.alignTeam(b)
-
+    
     // battle
     a[0].hp -= b[0].atk
     b[0].hp -= a[0].atk
@@ -72,6 +82,8 @@ battleStep() {
     this.enemy = b
 
     this.checkWin()
+
+    this.alignTeams()
 }
 
 endBattle(result) {
@@ -111,40 +123,105 @@ pickItem() {
     let maxtier = Math.floor((this.turn - 1) * 0.5) + 1
     let tier = Math.floor(Math.random() * maxtier) + 1
     let options = getTier(tier)
+    console.log(options)
+    if (options.length === 0) return false
     let item = options[Math.floor(Math.random() * options.length)]
-    // console.log('picked item: ' + item)
     return item
 }
 
 makeEnemy() {
     let enemy_name = this.pickItem()
+    if (!enemy_name) return null
     let enemy = makeCopy(dex[enemy_name])
     return enemy
 }
 
-select(shop) {
-    this.selected = this.selected === shop ? null : shop
+buy(from, to) {
+    let buying_item = from > 4
+    let has_pet = this.team[to] !== null
+    if (buying_item && !has_pet) return false
+    if (buying_item && has_pet) {
+        // buy item for pet
+        slot_pet.hp += selected_item.hp
+        slot_pet.atk += selected_item.atk
+        slot_pet.xp += selected_item.xp
+        if (selected_item.fx)
+            slot_pet.fx = selected_item.fx
+
+        return true
+    }
+    if (!buying_item && has_pet) {
+        // upgrade pet
+        let from_pet = this.shop[from]
+        let to_pet = this.team[to]
+        if (from_pet.emoji === to_pet.emoji) {
+            // take max stats
+            this.team[to].hp = Math.max(to_pet.hp, from_pet.hp)
+            this.team[to].atk = Math.max(to_pet.atk, from_pet.atk)
+            this.team[to].def = Math.max(to_pet.def, from_pet.def)
+            this.shop[from] = null
+            // add xp, hp, and atk
+            this.team[to].xp++
+            this.team[to].hp++
+            this.team[to].atk++
+            return true
+        }
+        return false
+    }
+    if (!buying_item && !has_pet) {
+        // buy pet
+        this.team[to] = makeCopy(this.shop[from])
+        this.team[to].xp = 1
+        this.shop[from] = null
+        return true
+    }
 }
 
-buy(from, to) {
+tryBuy(from, to) {
     if (this.gold < 3) {
         alert('Not enough gold')
         return false
     }
-    let buying_item = from > 4
-    let has_pet = this.team[to] !== null
-    if (buying_item && !has_pet)
-        return false
-    if (!buying_item && has_pet)
-        return false
-    if (this.frozen.includes(from))
-        freeze(from)
+    const bought = this.buy(from, to)
+    if (bought) {
+        this.gold -= 3
+        this.selected = null
+        if (this.frozen.includes(from))
+            freeze(from)
+    }
+    return bought
+}
 
-    this.team[to] = this.shop[from]
-    this.shop[from] = null
-
-    this.gold -= 3
-    this.selected = null
+select(slot) {
+    if (this.selected === null) {
+        // if nothing selected, select
+        this.selected = slot
+        return
+    } else if (this.selected === slot) {
+        // if same slot, deselect
+        this.selected = null
+        return
+    }
+    // something's already selected, what to do?
+    const slot_type = slot.substring(0,1)
+    const slot_num = slot.substring(1)
+    const selected_type = this.selected.substring(0,1)
+    const selected_num = this.selected.substring(1)
+    if (slot_type !== 't') {
+        // if not applying to team, just update selection
+        this.selected = slot
+        return
+    }
+    if (selected_type === 't') {
+        // swapping team members
+        let temp = this.team[selected_num]
+        this.team[selected_num] = this.team[slot_num]
+        this.team[slot_num] = temp
+        this.selected = null
+        return
+    }
+    // we selected non-team and then team, try to buy
+    this.tryBuy(selected_num, slot_num)
 }
 
 freeze(item = null) {
