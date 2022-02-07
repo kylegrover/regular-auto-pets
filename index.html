@@ -70,7 +70,11 @@
                     v-on:click="game.roll()"
                 >Roll</button>
                 <button
-                    v-bind:disabled="game.selected === null"
+                    v-bind:disabled="game.selected === null || game.selected.substring(0,1) != 't'"
+                    v-on:click="game.sell()"
+                >Sell</button>
+                <button
+                    v-bind:disabled="game.selected === null || game.selected.substring(0,1) != 's'"
                     v-on:click="game.freeze()"
                 >Freeze</button>
                 <button
@@ -120,6 +124,8 @@
             <button v-on:click="startGame()">Play Again</button>
     </div>
     <script src="./js/game.js"></script>
+    <script src="./js/game.shop.js"></script>
+    <script src="./js/game.battle.js"></script>
     <script src="./js/main.js"></script>
     <script>
         Vue.component('pet', {

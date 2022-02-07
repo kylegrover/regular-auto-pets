@@ -21,6 +21,10 @@ button {
     padding: 4px 8px;
     border-radius: 2px;
 }
+button:disabled {
+    background: #ccc;
+    color: #666;
+}
 
 #sak {
     max-width: 400px;
