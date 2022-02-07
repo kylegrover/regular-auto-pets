@@ -11,7 +11,7 @@ Then use (https://csvjson.com/csv2json)[https://csvjson.com/csv2json] to generat
 - pet
 - emoji
 - atk
-- def
+- hp
 - tier
 
 *items*
@@ -19,7 +19,7 @@ Then use (https://csvjson.com/csv2json)[https://csvjson.com/csv2json] to generat
 - emoji
 - tier
 - atk
-- def
+- hp
 - special
 - status
 - description

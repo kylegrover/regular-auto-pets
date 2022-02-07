@@ -1,4 +1,4 @@
-item,emoji,tier,atk,def,special,status,description
+item,emoji,tier,atk,hp,special,status,description
 apple,🍎,1,1,1,,,"Give a pet +1⚔ and +1💖"
 honey,🍯,1,0,0,,1,"Give a pet Honey Bee. (Summon a 1/1 Bee after fainting.)"
 cupcake,🧁,2,0,0,1,,"Give a pet +3⚔ and +3💖 until end of battle."
